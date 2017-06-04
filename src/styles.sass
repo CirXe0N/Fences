@@ -1,0 +1,36 @@
+// IMPORTS
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700')
+
+// GLOBAL STYLING
+
+*, *:before, *:after
+  -moz-box-sizing: border-box
+  -webkit-box-sizing: border-box
+  box-sizing: border-box
+
+html, body
+  height: 100%
+  margin: 0
+
+.button
+  border-radius: 5px
+  color: #FFF
+  background-color: #807ACD
+  border: solid 1px #95989A
+  text-align: center
+  font-weight: 700
+  padding: 0.4rem 1.3rem
+  box-shadow: none
+  font-family: 'Lato', sans-serif
+  font-size: 0.9em
+
+  &:hover
+    background-color: #605aa5
+    cursor: pointer
+
+  &.disabled
+    background-color: #a39df7
+
+    &:hover
+      background-color: #a39df7
+      cursor: not-allowed

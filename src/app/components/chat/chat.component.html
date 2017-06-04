@@ -1,0 +1,20 @@
+<div class="chat-container">
+  <div class="message-container">
+    <!--<div class="row opponent">-->
+      <!--<div class="message">-->
+        <!--<div class="message-information">-->
+          <!--<div class="name"> OPPONENT </div>-->
+          <!--<div class="time"> 12:00 </div>-->
+        <!--</div>-->
+        <!--<div class="text">-->
+          <!--Hi, How are you?-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  </div>
+  <!--<div class="status"> Opponent is typing ... </div>-->
+  <div class="input-field">
+    <textarea [attr.disabled]="isConnected"></textarea>
+    <a class="button" [ngClass]="{'disabled': !isConnected}"> Send </a>
+  </div>
+</div>
