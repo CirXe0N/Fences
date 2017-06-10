@@ -1,20 +1,21 @@
 <div class="chat-container">
-  <div class="message-container">
-    <!--<div class="row opponent">-->
-      <!--<div class="message">-->
-        <!--<div class="message-information">-->
-          <!--<div class="name"> OPPONENT </div>-->
-          <!--<div class="time"> 12:00 </div>-->
-        <!--</div>-->
-        <!--<div class="text">-->
-          <!--Hi, How are you?-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
+  <div #messageContainer class="message-container">
+    <div #messageItems *ngFor="let message of messages">
+      <div class="row" [ngClass]="{'own': !isOpponentMessage(message), 'opponent': isOpponentMessage(message)}">
+        <div class="message">
+          <div class="message-information">
+            <div *ngIf="isOpponentMessage(message)" class="name"> OPPONENT </div>
+            <div *ngIf="!isOpponentMessage(message)" class="name"> OWN </div>
+            <div class="time">{{message.sent_at}}</div>
+          </div>
+          <div class="text"> {{message.content}} </div>
+        </div>
+      </div>
+    </div>
   </div>
   <!--<div class="status"> Opponent is typing ... </div>-->
-  <div class="input-field">
-    <textarea [attr.disabled]="isConnected"></textarea>
-    <a class="button" [ngClass]="{'disabled': !isConnected}"> Send </a>
+  <div [formGroup]="form" class="input-field">
+    <textarea formControlName="content" (keyup.enter)="sendMessage(form.value)" title=""></textarea>
+    <a class="button" (click)="sendMessage(form.value)" [ngClass]="{'disabled': !isConnected}"> Send </a>
   </div>
 </div>
