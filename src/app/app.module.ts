@@ -6,6 +6,7 @@ import {HttpModule} from "@angular/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {APIService} from "./services/api.service";
 import {UserService} from "./services/user.service";
+import {MomentModule} from "angular2-moment";
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import {UserService} from "./services/user.service";
   imports: [
     BrowserModule,
     HttpModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MomentModule
   ],
   providers: [
     APIService,
