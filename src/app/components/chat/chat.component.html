@@ -1,14 +1,32 @@
 <div class="chat-container">
   <div #messageContainer class="message-container">
     <div #messageItems *ngFor="let message of messages">
-      <div class="row" [ngClass]="{'own': !isOpponentMessage(message), 'opponent': isOpponentMessage(message)}">
-        <div class="message">
-          <div class="message-information">
-            <div *ngIf="isOpponentMessage(message)" class="name"> OPPONENT </div>
-            <div *ngIf="!isOpponentMessage(message)" class="name"> OWN </div>
-            <div class="time">{{message.sent_at | amDateFormat: 'DD MMM YYYY HH:MM'}}</div>
+      <div [ngSwitch]="message.type">
+        <div *ngSwitchCase="'CONNECT'" class="row">
+          <div class="system message">
+            -
+            <span *ngIf="isOpponentMessage(message)"> Opponent </span>
+            <span *ngIf="!isOpponentMessage(message)"> You </span>
+            joined the chat. -
           </div>
-          <div class="text"> {{message.content}} </div>
+        </div>
+        <div *ngSwitchCase="'DISCONNECT'" class="row">
+          <div class="system message">
+            -
+            <span *ngIf="isOpponentMessage(message)"> Opponent </span>
+            <span *ngIf="!isOpponentMessage(message)"> You </span>
+            left the chat. -
+          </div>
+        </div>
+        <div *ngSwitchCase="'MESSAGE'" class="row" [ngClass]="{'right-aligned': !isOpponentMessage(message), 'left-aligned': isOpponentMessage(message)}">
+          <div class="chat message" [ngClass]="{'own': !isOpponentMessage(message), 'opponent': isOpponentMessage(message)}">
+            <div class="message-information">
+              <div *ngIf="isOpponentMessage(message)" class="name"> Opponent </div>
+              <div *ngIf="!isOpponentMessage(message)" class="name"> You </div>
+              <div class="time">{{message.sent_at | amDateFormat: 'DD MMM YYYY HH:MM'}}</div>
+            </div>
+            <div class="content"> {{message.content}} </div>
+          </div>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import {APIService} from "../../services/api.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ChatMessage} from "../../interfaces/chatMessage.interface";
 import {UserService} from "../../services/user.service";
-import {ChatStatus} from "../../interfaces/chatStatus.interface";
+import {WebSocketMessage} from "../../interfaces/webSocketMessage.interface";
 
 @Component({
   selector: 'chat',
@@ -40,7 +40,12 @@ export class ChatComponent implements OnInit, AfterViewInit {
     this.api.getChatStatus().subscribe(() => {
       this.showReceivingMessageStatus();
     });
-    this.api.getChatMessages().subscribe(res => {this.messages.push(res); this.hideReceivingMessageStatus()});
+
+    this.api.getChatMessages().subscribe(res => {
+      this.messages.push(res);
+      this.hideReceivingMessageStatus()
+    });
+
     this.api.findGameRoom();
   }
 
@@ -59,9 +64,10 @@ export class ChatComponent implements OnInit, AfterViewInit {
   }
 
   public isTyping(): void {
-    let statusMessage: ChatStatus = {
+    let statusMessage: WebSocketMessage = {
       'type': 'TYPING',
       'user_id': this.user.getUserID(),
+      'sent_at': null
     };
 
     this.api.sendMessage(statusMessage);

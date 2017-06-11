@@ -6,8 +6,8 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {ChatMessage} from "../interfaces/chatMessage.interface";
 import {webSocketResponse} from "../interfaces/webSocketResponse.interface";
 import {UserService} from "./user.service";
-import {ChatStatus} from "../interfaces/chatStatus.interface";
 import {Subject} from "rxjs/Subject";
+import {WebSocketMessage} from "../interfaces/webSocketMessage.interface";
 
 @Injectable()
 export class APIService {
@@ -20,21 +20,33 @@ export class APIService {
 
   private openWebSocketConnection(room_id: string) {
     this.webSocketBridge.connect('ws://localhost:8000/' + room_id);
-    this.webSocketBridge.socket.onopen = () => {this.isConnected$.next(true)};
-    this.webSocketBridge.socket.onmessage = (event: MessageEvent) => {
-      let message = JSON.parse(event.data);
-      if (message.type === 'DISCONNECT') {
-        this.isConnected$.next(false)
-      }
+    this.webSocketBridge.socket.onmessage = (event: MessageEvent) => this.dispatchMessageEvent(event);
+  }
 
-      if (message.type === 'TYPING' && message.user_id !== this.user.getUserID()) {
-        this.isReceiving$.next(true)
+  private dispatchMessageEvent(event: MessageEvent) {
+    let message = JSON.parse(event.data);
+    switch(message.type) {
+      case 'DISCONNECT': {
+        this.messages$.next(message);
+        this.isConnected$.next(false);
+        break;
       }
-
-      if (message.type === 'MESSAGE') {
-        this.messages$.next(message)
+      case 'TYPING': {
+        if (message.user_id !== this.user.getUserID()) {
+          this.isReceiving$.next(true);
+        }
+        break;
       }
-    };
+      case 'MESSAGE': {
+        this.messages$.next(message);
+        break;
+      }
+      case 'CONNECT': {
+        this.messages$.next(message);
+        this.isConnected$.next(true);
+        break;
+      }
+    }
   }
 
   public findGameRoom() {
@@ -49,7 +61,7 @@ export class APIService {
       })
   }
 
-  public sendMessage(message: ChatMessage | ChatStatus) {
+  public sendMessage(message: ChatMessage | WebSocketMessage) {
     this.webSocketBridge.send(message)
   }
 

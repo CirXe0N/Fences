@@ -15,11 +15,31 @@
     flex-direction: row
     word-wrap: break-word
 
-    &.own
+    &.right-aligned
       justify-content: flex-end
 
-      .message
-        background-color: #ECEFF2
+    &.left-aligned
+      justify-content: flex-start
+
+.message
+  border-radius: 4px
+  position: relative
+  width: 55%
+  margin: 0.9rem 1rem 0 1rem
+
+  &.system
+    font-size: 0.75rem
+    padding: 0.2rem
+    color: #555
+    font-weight: 700
+    font-style: italic
+    width: 100%
+    text-align: center
+    background-color: #EBEBEB
+
+  &.chat
+    &.own
+      background-color: #ECEFF2
 
       .name
         position: absolute
@@ -30,14 +50,11 @@
       .time
         display: inline-block
 
-      .text
+      .content
         text-align: right
 
     &.opponent
-      justify-content: flex-start
-
-      .message
-        background-color: #E6F0F8
+      background-color: #E6F0F8
 
       .name
         color: #E15B31
@@ -46,12 +63,6 @@
         position: absolute
         right: 0.4rem
         top: 0.4rem
-
-.message
-  border-radius: 4px
-  position: relative
-  width: 55%
-  margin: 0.9rem 1rem 0 1rem
 
   .message-information
     width: 100%
@@ -62,13 +73,14 @@
       background-color: #FFFFFF
       font-size: 0.6rem
       padding: 0.15rem 0.25rem
+      text-transform: uppercase
 
     .time
       display: inline-block
       color: #95989A
       font-size: 0.6rem
 
-  .text
+  .content
     font-size: 0.85rem
     padding: 0.95rem
 
