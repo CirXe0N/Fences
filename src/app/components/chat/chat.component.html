@@ -13,9 +13,9 @@
       </div>
     </div>
   </div>
-  <!--<div class="status"> Opponent is typing ... </div>-->
+  <div class="status" *ngIf="isReceivingMessage"> Opponent is typing ... </div>
   <div [formGroup]="form" class="input-field">
-    <textarea formControlName="content" (keyup.enter)="sendMessage(form.value)" title=""></textarea>
+    <textarea formControlName="content" (keyup.enter)="sendMessage(form.value)" (keydown)="isTyping()" title=""></textarea>
     <a class="button" (click)="sendMessage(form.value)" [ngClass]="{'disabled': !isConnected}"> Send </a>
   </div>
 </div>

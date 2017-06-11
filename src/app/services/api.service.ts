@@ -6,12 +6,15 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {ChatMessage} from "../interfaces/chatMessage.interface";
 import {webSocketResponse} from "../interfaces/webSocketResponse.interface";
 import {UserService} from "./user.service";
+import {ChatStatus} from "../interfaces/chatStatus.interface";
+import {Subject} from "rxjs/Subject";
 
 @Injectable()
 export class APIService {
   private webSocketBridge: WebSocketBridge = new WebSocketBridge();
   private messages$: ReplaySubject<ChatMessage> = new ReplaySubject();
   private isConnected$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  private isReceiving$: Subject<boolean> = new Subject();
 
   constructor(private http: Http, private user: UserService) {}
 
@@ -22,6 +25,10 @@ export class APIService {
       let message = JSON.parse(event.data);
       if (message.type === 'DISCONNECT') {
         this.isConnected$.next(false)
+      }
+
+      if (message.type === 'TYPING' && message.user_id !== this.user.getUserID()) {
+        this.isReceiving$.next(true)
       }
 
       if (message.type === 'MESSAGE') {
@@ -42,7 +49,7 @@ export class APIService {
       })
   }
 
-  public sendMessage(message: ChatMessage) {
+  public sendMessage(message: ChatMessage | ChatStatus) {
     this.webSocketBridge.send(message)
   }
 
@@ -52,5 +59,9 @@ export class APIService {
 
   public getConnectionStatus() {
     return this.isConnected$;
+  }
+
+  public getChatStatus() {
+    return this.isReceiving$;
   }
 }

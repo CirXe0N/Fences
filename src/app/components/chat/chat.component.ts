@@ -3,6 +3,7 @@ import {APIService} from "../../services/api.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ChatMessage} from "../../interfaces/chatMessage.interface";
 import {UserService} from "../../services/user.service";
+import {ChatStatus} from "../../interfaces/chatStatus.interface";
 
 @Component({
   selector: 'chat',
@@ -16,10 +17,12 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   public form: FormGroup;
   public isConnected: boolean;
+  public isReceivingMessage: boolean;
   public messages = [];
 
   constructor(private api: APIService, private fb: FormBuilder, private user: UserService) {
     this.form = this.fb.group({
+      type: ['MESSAGE', Validators.required],
       content: ['', Validators.required]
     });
   }
@@ -34,7 +37,10 @@ export class ChatComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.api.getChatMessages().subscribe(res => this.messages.push(res));
+    this.api.getChatStatus().subscribe(() => {
+      this.showReceivingMessageStatus();
+    });
+    this.api.getChatMessages().subscribe(res => {this.messages.push(res); this.hideReceivingMessageStatus()});
     this.api.findGameRoom();
   }
 
@@ -52,12 +58,32 @@ export class ChatComponent implements OnInit, AfterViewInit {
     }
   }
 
+  public isTyping(): void {
+    let statusMessage: ChatStatus = {
+      'type': 'TYPING',
+      'user_id': this.user.getUserID(),
+    };
+
+    this.api.sendMessage(statusMessage);
+  }
+
   private scrollToBottom(): void {
     this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
   }
 
   public isOpponentMessage(message: ChatMessage): boolean {
     return message.user_id !== this.user.getUserID()
+  }
+
+  public showReceivingMessageStatus() {
+    if(!this.isReceivingMessage) {
+      this.isReceivingMessage = true;
+      setTimeout(()=>this.hideReceivingMessageStatus(), 3000)
+    }
+  }
+
+  public hideReceivingMessageStatus() {
+    this.isReceivingMessage = false;
   }
 }
 
