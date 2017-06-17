@@ -7,11 +7,13 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {APIService} from "./services/api.service";
 import {UserService} from "./services/user.service";
 import {MomentModule} from "angular2-moment";
+import {GameBoardComponent} from "./components/game-board/game-board.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChatComponent
+    ChatComponent,
+    GameBoardComponent
   ],
   imports: [
     BrowserModule,
